@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "71811481468",
+    "project_id": "listpushnotifications",
+    "storage_bucket": "listpushnotifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71811481468:android:5c3189fd33c42f8ba7eef9",
+        "android_client_info": {
+          "package_name": "com.humberto.linkedlist.list"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9q52rZFKXqo5jcPSTb47scr0nlJSSwDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
