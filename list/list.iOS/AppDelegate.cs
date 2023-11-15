@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Firebase.CloudMessaging;
 using Foundation;
 using UIKit;
 using UserNotifications;
+using Xamarin.Essentials;
 
 namespace list.iOS
 {
@@ -12,7 +15,7 @@ namespace list.iOS
     // User Interface of the application, as well as listening (and optionally responding) to 
     // application events from iOS.
     [Register("AppDelegate")]
-    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
+    public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate, IUNUserNotificationCenterDelegate,IMessagingDelegate
     {
         //
         // This method is invoked when the application has loaded and is ready to run. In this 
@@ -24,6 +27,7 @@ namespace list.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            Firebase.Core.App.Configure();
             LoadApplication(new App());
 
             RequestPushPermissionAsync();
@@ -72,14 +76,43 @@ namespace list.iOS
             Console.WriteLine($"Failed to register for remote notifications: {error.Description}");
         }
 
+        [Export("messaging:didReceiveRegistrationToken:")]
+        public void DidReceiveRegistrationToken(Messaging messaging, string fcmToken)
+        {
+            //Preferences.Set("tokenNotifica", fcmToken);
+            Debug.WriteLine("\nValue: " + (fcmToken));
+        }
+
+        [Export("messaging:didRefreshRegistrationToken:")]
+        public void DidRefreshRegistrationToken(Messaging messaging, string fcmToken)
+        {
+            System.Diagnostics.Debug.WriteLine($"FCM Token: {fcmToken}");
+        }
+
         public override void DidReceiveRemoteNotification(UIApplication application, NSDictionary userInfo, Action<UIBackgroundFetchResult> completionHandler)
         {
             // This will be called if the app is in the background/not running and if in the foreground.
             // However, it will not display a notification visually if the app is in the foreground.
 
-            PresentNotification(userInfo);
+
+            if (App.IsMinimized)
+            {
+                PresentNotification(userInfo);
+            }
+            else
+            {
+                ProcessNotification(userInfo, false);
+            }
 
             completionHandler(UIBackgroundFetchResult.NoData);
+        }
+
+        // To receive notifications in foreground on iOS 10 devices.
+        [Export("userNotificationCenter:willPresentNotification:withCompletionHandler:")]
+        public void WillPresentNotification(UNUserNotificationCenter center, UNNotification notification, Action<UNNotificationPresentationOptions> completionHandler)
+        {
+            // Do your magic to handle the notification data
+            System.Console.WriteLine(notification.Request.Content.UserInfo);
         }
 
         public bool RequestPushPermissionAsync()
@@ -95,6 +128,24 @@ namespace list.iOS
 
                                                                             }
                                                                         });
+            }
+            else // Register your app for remote notifications.
+            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+            {
+                // iOS 10 or later
+                var authOptions = UNAuthorizationOptions.Alert | UNAuthorizationOptions.Badge | UNAuthorizationOptions.Sound;
+                UNUserNotificationCenter.Current.RequestAuthorization(authOptions, (granted, error) =>
+                {
+                    Console.WriteLine(granted);
+                });
+
+                // For iOS 10 display notification (sent via APNS)
+                UNUserNotificationCenter.Current.Delegate = this;
+
+                // For iOS 10 data message (sent via FCM)
+                //Messaging.SharedInstance.FcmToken;//.RemoteMessageDelegate = this;
+
+                //Messaging.SharedInstance.Delegate = this;
             }
             else if (UIDevice.CurrentDevice.CheckSystemVersion(8, 0))
             {
@@ -112,8 +163,15 @@ namespace list.iOS
                 UIApplication.SharedApplication.RegisterForRemoteNotifications();
             }
 
+            //FirebaseMessaging.
+            Messaging.SharedInstance.Delegate = this;
+            //Messaging.SharedInstance.remote
+
+            //System.Diagnostics.Debug.WriteLine("FCM", Messaging.SharedInstance.FcmToken);
+
             return true;
         }
+
 
         public void UnRegisteredForRemoteNotifications(string args)
         {
@@ -139,7 +197,7 @@ namespace list.iOS
                 // Basically the JSON gets dumped right into a NSDictionary,
                 // so keep that in mind.
                 if (aps.ContainsKey(new NSString("alert")))
-                    alert = (aps[new NSString("alert")] as NSString).ToString();
+                    alert = (aps[new NSString("alert")]).ToString();
 
                 //If this came from the ReceivedRemoteNotification while the app was running,
                 // we of course need to manually process things like the sound, badge, and alert.
@@ -174,7 +232,8 @@ namespace list.iOS
             var msg = string.Empty;
             if (aps.ContainsKey(new NSString("alert")))
             {
-                msg = (aps[new NSString("alert")] as NSString).ToString();
+                msg = (aps[new NSString("alert")]).ToString();
+                System.Diagnostics.Debug.WriteLine("msg extracted " + msg);
             }
 
             if (string.IsNullOrEmpty(msg))
