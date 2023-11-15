@@ -48,14 +48,14 @@ namespace list.iOS
                     byte[] result = new byte[deviceToken.Length];
                     Marshal.Copy(deviceToken.Bytes, result, 0, (int)deviceToken.Length);
                     var token = BitConverter.ToString(result).Replace("-", "");
-                     System.Diagnostics.Debug.WriteLine("Token extracted " + token);
+                     System.Diagnostics.Debug.WriteLine("APN Token extracted " + token);
                      System.Diagnostics.Debug.WriteLine("Token Description " + deviceToken.Description);
                     //pushNotifications.RegistrationCompletedAction(token);
                 }
                 else
                 {
                     var token = deviceToken.Description.Trim('<', '>').Replace(" ", string.Empty).ToUpperInvariant();
-                     System.Diagnostics.Debug.WriteLine("Token " + token);
+                     System.Diagnostics.Debug.WriteLine("APN Token " + token);
                     //pushNotifications.RegistrationCompletedAction(token);
                 }
             }
@@ -164,7 +164,10 @@ namespace list.iOS
             }
 
             //FirebaseMessaging.
-            Messaging.SharedInstance.Delegate = this;
+            if (UIDevice.CurrentDevice.CheckSystemVersion(10, 0))
+            {
+                Messaging.SharedInstance.Delegate = this;
+            }
             //Messaging.SharedInstance.remote
 
             //System.Diagnostics.Debug.WriteLine("FCM", Messaging.SharedInstance.FcmToken);
