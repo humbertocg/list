@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<views:BaseContentPage
+    xmlns:views="clr-namespace:list.Views"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core"
+    ios:Page.UseSafeArea="true"
+    x:Class="list.Views.GetDataViewPage">
+    <StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <Label Text="Total Items:" HorizontalOptions="Start"/>
+            <Label Text="{Binding Count}" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Start"/>
+        </StackLayout>
+        <ListView ItemsSource="{Binding Entries}" SelectedItem="{Binding SelectedItem}" HasUnevenRows="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="API:" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Api}" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Start"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Descripcion:" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Description}" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Start"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Auth:" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Auth}" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Start"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="HTTPS:" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Https}" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Start"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Cors:" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Cors}" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Start"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Link:" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Link}" HorizontalOptions="FillAndExpand"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Category:" HorizontalOptions="Start"/>
+                                <Label Text="{Binding Category}" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Start"/>
+                            </StackLayout>
+                        </StackLayout>
+
+                    </ViewCell>
+
+                </DataTemplate>
+
+            </ListView.ItemTemplate>
+
+        </ListView>
+    </StackLayout>
+</views:BaseContentPage>
+

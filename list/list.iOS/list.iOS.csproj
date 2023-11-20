@@ -144,6 +144,10 @@
       <Project>{F737D229-3114-488B-B9C5-B8A8544D0F8B}</Project>
       <Name>list</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\RestConsumer\RestConsumer.csproj">
+      <Project>{1074B5E5-C86E-40EF-BC5C-246039F28FBE}</Project>
+      <Name>RestConsumer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="GoogleService-Info.plist" />

@@ -19,9 +19,20 @@
   <ItemGroup>
     <None Remove="Models\" />
     <None Remove="Models\Notifications\" />
+    <None Remove="ViewModels\" />
+    <None Remove="Views\" />
+    <None Remove="Services\" />
+    <None Remove="Models\API\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Models\Notifications\" />
+    <Folder Include="ViewModels\" />
+    <Folder Include="Views\" />
+    <Folder Include="Services\" />
+    <Folder Include="Models\API\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RestConsumer\RestConsumer.csproj" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 ﻿using System;
+using list.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,7 +12,7 @@ namespace list
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new GetDataViewPage();
         }
 
         protected override void OnStart ()
